@@ -1,5 +1,5 @@
 #include <stdint.h>
-#include "../boot/boot_types.h"
+#include "../boot/src/boot_types.h"
 #include "kernel.h"
 
 void entry_point(bootinfo_t *binfo)
