@@ -3,9 +3,10 @@
 default:
 
 boot:
-	cp boot/* edk2/MinLoaderPkg/Application/MinLoader/
-	make -C edk2/
-	cp edk2/
+	make -C boot/
+
+kernel:
+	make -C kernel/
 
 run:
 	qemu-system-x86_64 \
@@ -15,8 +16,10 @@ run:
 
 all:
 	make boot
-	make -C kernel/
+	make kernel
+	make run
 
 clean:
+	make -C boot/ clean
 	make -C kernel/ clean
 
