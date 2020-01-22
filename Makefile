@@ -20,7 +20,9 @@ run:
 all:
 	make boot
 	make kernel
+	make run
 
 clean:
+	make -C boot/ clean
 	make -C kernel/ clean
 	rm -rf ./edk2/MinLoaderPkg/Application/MinLoader/boot
