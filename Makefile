@@ -1,11 +1,15 @@
-.PHONY: default boot run all clean
+.PHONY: default boot kernel run all clean
 
 default:
 
 boot:
-	cp boot/* edk2/MinLoaderPkg/Application/MinLoader/
-	make -C edk2/
-	cp edk2/
+	cp -r boot edk2/MinLoaderPkg/Application/MinLoader/
+	cd ./edk2; build
+	cp ./edk2/Build/MinLoaderPkgX64/RELEASE_GCC5/X64/MinLoaderPkg/Application/MinLoader/MinLoader/OUTPUT/MinLoader.efi ./fs/EFI/BOOT/BOOTX64.EFI
+
+kernel:
+	make -C kernel/
+	cp kernel/kernel.elf ./fs
 
 run:
 	qemu-system-x86_64 \
@@ -15,8 +19,8 @@ run:
 
 all:
 	make boot
-	make -C kernel/
+	make kernel
 
 clean:
 	make -C kernel/ clean
-
+	rm -rf ./edk2/MinLoaderPkg/Application/MinLoader/boot
