@@ -10220,7 +10220,7 @@ UefiMain (
   );
 # 32 "<コマンドライン>" 2
 # 1 "/home/totsugekitai/workspace/mywork/min_bootloader/edk2/MinLoaderPkg/Application/MinLoader/boot/kernel_jump.S"
+.code64
 .global jump_to_kernel
-
 jump_to_kernel:
     jmp *%rsi
