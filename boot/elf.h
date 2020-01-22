@@ -28,3 +28,17 @@ typedef struct Elf64_Ehdr {
     Elf64_Half      e_shstrndx;         // Section name string table index
 } Elf64_Ehdr;
 
+// Section Header
+typedef struct Elf64_Shdr {
+    Elf64_Word      sh_name;
+    Elf64_Word      sh_type;
+    Elf64_Xword     sh_flags;
+    Elf64_Addr      sh_addr;
+    Elf64_Off       sh_offset;
+    Elf64_Xword     sh_size;
+    Elf64_Word      sh_link;
+    Elf64_Word      sh_info;
+    Elf64_Xword     sh_addralign;
+    Elf64_Xword     sh_entsize;
+} Elf64_Shdr;
+

@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include <Uefi.h>
+#include <Library/UefiLib.h>
 #include <Library/UefiBootServicesTableLib.h>
 #include <Protocol/GraphicsOutput.h>
 #include <Protocol/SimpleFileSystem.h>

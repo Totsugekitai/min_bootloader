@@ -5,7 +5,7 @@ uint64_t *update_start_addr(uint64_t *start_addr);
 
 EFI_STATUS
 EFIAPI
-EfiMain(EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable)
+UefiMain(EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable)
 {
     bootinfo_t binfo;
     EFI_STATUS status;
@@ -37,6 +37,7 @@ EfiMain(EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable)
     do {
         sfsp->OpenVolume(sfsp, &root);
     } while(EFI_ERROR(status));
+    Print(L"open volume\n");
 
     // カーネルのファイルを開く
     EFI_FILE_PROTOCOL *kernel_file;
@@ -45,33 +46,39 @@ EfiMain(EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable)
     do {
         status = root->Open(root, &kernel_file, file_name, file_mode, 0);
     } while(EFI_ERROR(status));
+    Print(L"open file\n");
 
     // カーネルのファイルサイズを取得
-    EFI_FILE_INFO *file_info;
+    EFI_FILE_INFO file_info;
     EFI_GUID fi_guid = EFI_FILE_INFO_ID;
     UINTN buf_size = BUF_256B;
     do {
-        status = kernel_file->GetInfo(kernel_file, &fi_guid, &buf_size, file_info);
+        status = kernel_file->GetInfo(kernel_file, &fi_guid, &buf_size, &file_info);
     } while(EFI_ERROR(status));
-    UINTN file_size = file_info->FileSize;
+    Print(L"get file info\n");
+    UINTN file_size = file_info.FileSize;
+    Print(L"get file size: %d\n", file_size);
 
     // カーネルファイルをメモリに読み込む
-    uint64_t *kernel_program;
+    uint64_t *kernel_program = NULL;
     do {
         status = kernel_file->Read(kernel_file, &file_size, kernel_program);
     } while(EFI_ERROR(status));
+    Print(L"read file\n");
 
     // bodyをメモリに書き込む
     uint64_t *start_addr = KERNEL_START_QEMU;
     gBS->CopyMem(start_addr, kernel_program, file_size);
+    Print(L"copy file to mem\n");
 
     // update start address
     uint64_t *updated_start_addr = update_start_addr(start_addr);
+    Print(L"update start_addr: %p\n", updated_start_addr);
 
     // メモリマップ取得のための変数
     UINTN mmapsize = 0, mapkey, descsize;
     UINT32 descver;
-    EFI_MEMORY_DESCRIPTOR *mmap;
+    EFI_MEMORY_DESCRIPTOR *mmap = NULL;
     // ExitBootService()の処理を開始
     do {
         status = gBS->GetMemoryMap(&mmapsize, mmap, &mapkey, &descsize, &descver);
@@ -99,5 +106,6 @@ EfiMain(EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable)
 uint64_t *update_start_addr(uint64_t *start_addr)
 {
     Elf64_Ehdr *elf_header = (Elf64_Ehdr *)start_addr;
-    return (uint64_t *)elf_header->e_entry;
+    Elf64_Shdr *section_header = (Elf64_Shdr *)((char *)elf_header + elf_header->e_shoff);
+    return (uint64_t *)((char *)start_addr + (int)section_header[1].sh_offset);
 }
