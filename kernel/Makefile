@@ -5,7 +5,7 @@ CFLAGS		= -g -O0 \
 			  -nostdinc -nostdlib \
 			  -fPIE \
 			  -fno-builtin -fno-common -fno-stack-protector \
-			  -mno-red-zone -mno-avx -mgeneral-regs-only
+			  -mno-red-zone
 LDFLAGS		= -Map kernel.map -e entry_point
 
 OBJS		= kernel.o
