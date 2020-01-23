@@ -9,11 +9,11 @@ void entry_point(bootinfo_t *binfo)
     uint32_t ppsl = binfo->vinfo.ppsl;
     pix_format *fb = (pix_format *)binfo->vinfo.fb;
 
-    pix_format white = {0xff, 0xff, 0xff, 0x00};
+    pix_format bgr = {0x66, 0xff, 0x99, 0x00};
 
     for (uint32_t i = 0; i < y_axis; i++) {
         for (uint32_t j = 0; j < x_axis; j++) {
-            fb[i * ppsl + j] = white;
+            fb[i * ppsl + j] = bgr;
         }
     }
 
