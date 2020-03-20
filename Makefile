@@ -3,9 +3,8 @@
 default:
 
 boot:
-	cp -r boot/src/* edk2/MinLoaderPkg/Application/MinLoader/boot/
-	cd ./edk2; build
-	cp ./edk2/Build/MinLoaderPkgX64/RELEASE_GCC5/X64/MinLoaderPkg/Application/MinLoader/MinLoader/OUTPUT/MinLoader.efi ./fs/EFI/BOOT/BOOTX64.EFI
+	make -C boot/
+	cp boot/edk2/Build/MinLoaderPkgX64/RELEASE_GCC5/X64/MinLoaderPkg/Application/MinLoader/MinLoader/OUTPUT/MinLoader.efi ./fs/EFI/BOOT/BOOTX64.EFI
 
 kernel:
 	make -C kernel/

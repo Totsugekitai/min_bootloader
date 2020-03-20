@@ -6,7 +6,7 @@ CFLAGS		= -g -O0 \
 			  -fPIE \
 			  -fno-builtin -fno-common -fno-stack-protector \
 			  -mno-red-zone
-LDFLAGS		= -Map kernel.map -e entry_point
+LDFLAGS		= -T kernel.lds -Map kernel.map -e entry_point
 
 OBJS		= kernel.o
 
